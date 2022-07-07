@@ -9,7 +9,7 @@ export default function App(props: AppProps) {
     <>
       <Head>
         <link rel="icon" href="" />
-        <title>Invoce Payment Management</title>
+        <title>Invoce Payment Management.</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
 
