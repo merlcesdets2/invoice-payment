@@ -1,0 +1,15 @@
+
+.background  { 
+  background-color:#DEE0E6 ;
+  height: 100vh;
+  margin:0;
+}
+
+.button {
+  background-color:#007bff;
+  margin-top:20px;
+  font-weight:bold;
+  border-radius:2rem;
+  height:50px;
+  width: 100%;
+}

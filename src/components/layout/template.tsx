@@ -1,23 +1,28 @@
-import { AppShell, Title, Container } from '@mantine/core';
-import { NavbarNested } from './sidebar'
+import { AppShell,
+  Title,
+  Container,
+} from '@mantine/core';
+import {Headbar} from './headbar'
 
 type Props = {
-    title: string
-    hideNav?: boolean
+    title?: string
     children: React.ReactNode,
   };
 
-export const AplicationContainer = ({title, hideNav, children}: Props) => {
+export const AplicationContainer = ({title, children}: Props) => {
+
     return (
         <AppShell
         padding="md"
-        navbar={hideNav ? <nav/> : <NavbarNested/>}
         styles={(theme) => ({
             main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] },
         })}
+        navbarOffsetBreakpoint="sm"
+        fixed
+        header={<Headbar/>}
         >
-        <Title order={1} style={{ marginBottom: '3%' }}>{title}</Title>
-        <Container style={{ marginLeft: 0, background: 'white', padding: '2%'}}>
+        <Title order={1} style={{marginLeft: 2, marginBottom: '1%' }}>{title}</Title>
+        <Container style={{ marginLeft: 2, background: 'white', padding: '2%',maxWidth:'1090px'}}>
             {children}
         </Container>
         </AppShell>

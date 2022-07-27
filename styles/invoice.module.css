@@ -3,4 +3,17 @@
 }
 .summary td{
     border: none !important;
+    width: 15%
+}
+.summary th{
+  width: 5%
+}
+.producttable {
+  width: 15% !important
+}
+.nametable {
+  width: 20% !important
+}
+.actiontable {
+  width: 10% !important
 }
