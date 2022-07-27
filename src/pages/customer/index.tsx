@@ -11,13 +11,58 @@ const { apiCustomer } = AppConfig
 
 export const getServerSideProps = async () => {
 
-  const res = await fetch(`${apiCustomer}/customer/service/customer`, { 
-    method: 'get', 
-    headers: { 'accessToken': 'invoiceToken'}
-  })
-  const listData = await res.json()
+  // const res = await fetch(`${apiCustomer}/customer/service/customer`, { 
+  //   method: 'get', 
+  //   headers: { 'accessToken': 'invoiceToken'}
+  // })
+  // const listData = await res.json()
 
-  return { props: { listData: listData.data } }
+  const list = { data: [
+    {
+      "customerId": "2",
+      "customerCode": "CUS002",
+      "customerName": "Apple Co., Ltd.",
+      "creditLimit": "40000000",
+      "tel": "024992377",
+      "addressLine": "212 Rama 4 Road",
+      "tambolId": "2",
+      "tambolName": "",
+      "amphurId": "1",
+      "amphurName": "",
+      "provinceId": "1",
+      "provinceName": ""
+    },
+    {
+      "customerId": "6",
+      "customerCode": "CUS009",
+      "customerName": "apple Co., Ltd.",
+      "creditLimit": "40000000",
+      "tel": "024992377",
+      "addressLine": "212 Rama 4 Road",
+      "tambolId": "1",
+      "tambolName": "",
+      "amphurId": "1",
+      "amphurName": "",
+      "provinceId": "1",
+      "provinceName": ""
+    },
+    {
+      "customerId": "7",
+      "customerCode": "CUS006",
+      "customerName": "Banana Co., Ltd.",
+      "creditLimit": "40000000",
+      "tel": "024992377",
+      "addressLine": "212 Rama 4 Road",
+      "tambolId": "1",
+      "tambolName": "",
+      "amphurId": "1",
+      "amphurName": "",
+      "provinceId": "1",
+      "provinceName": ""
+    }
+  ] }
+
+  return { props: { listData: list.data } }
 }
 
 const useStyles = createStyles((theme) => ({
