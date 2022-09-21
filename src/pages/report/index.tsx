@@ -9,7 +9,7 @@ import { configInvoice, configCustomer } from '@/components/lov/config'
 import { ListOfValue } from '@/components/lov/listOfValue'
 import { IconRefresh, IconSearch, IconCloudDownload  } from '@tabler/icons'
 
-import { Custom500 } from '@/components/error/500'
+// import { Custom500 } from '@/components/error/500'
 import axiosConfig from '@/util/axiosConfig'
 import { dateToString } from '@/util/helper'
 import { AppConfig } from '@/AppConfig'
@@ -67,7 +67,7 @@ const apiInvoice = `${apiUrl}/invoice/service/invoice`
 
 const Report = ({ customerData }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   
-  const { data, error } = useSWRImmutable(apiInvoice, fetcher)
+  const { data } = useSWRImmutable(apiInvoice, fetcher)
 
   const [ openedCus, setOpenedCus ] = useState(false)
   const [ invoiceData, setInvoiceData] = useState([])
@@ -86,7 +86,7 @@ const Report = ({ customerData }: InferGetServerSidePropsType<typeof getServerSi
     if (data) setInvoiceData(data)
   }, [data])
   
-  if(error?.response.status === 500 || customerData?.error) return <Custom500/>
+  // if(error?.response.status === 500 || customerData?.error) return <Custom500/>
   if (!data) return (
     <Center pt={'20vh'}>
       <Loader />
