@@ -1,0 +1,1582 @@
+---
+openapi: 3.0.0
+info:
+  title: Standard-invoice-project API
+  description: Standard-invoice-project API
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/sitta.p/km-invoice/1.0.0
+  description: SwaggerHub API Auto Mocking
+- url: https://bcsapigwdev.triplet.co.th
+  description: Test
+- url: https://bcsapigw.triplet.co.th
+  description: Production
+tags:
+- name: Customer
+  description: api for customer data
+- name: Invoice
+  description: api for invoice data
+- name: Invoice Item
+  description: api for invoice item data
+- name: Product
+  description: api for product data
+- name: Utils
+  description: api for utility
+- name: Invoice Report
+  description: api for export invoice report
+paths:
+  /customer/service/customer:
+    get:
+      tags:
+      - Customer
+      summary: search customer list
+      description: |
+        ค้นหาข้อมูล Customer
+      operationId: searchCustomer
+      parameters:
+      - name: customerId
+        in: query
+        description: Customer Id
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: "1"
+      - name: customerCode
+        in: query
+        description: Customer Code (Partial Search)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: customerName
+        in: query
+        description: Customer Name (Partial Search)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnResponse'
+        "400":
+          description: bad input parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse401'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      security:
+      - ApiKeyAuth: []
+    put:
+      tags:
+      - Customer
+      summary: update customer
+      description: อัพเดทข้อมูล Customer
+      operationId: updateCustomer
+      requestBody:
+        description: Customer to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        "200":
+          description: customer updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: invalid input, object invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse401'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      security:
+      - ApiKeyAuth: []
+    post:
+      tags:
+      - Customer
+      summary: add customer
+      description: บันทึกข้อมูล Customer
+      operationId: addCustomer
+      requestBody:
+        description: Customer to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/service_customer_body'
+      responses:
+        "200":
+          description: customer added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+        "400":
+          description: invalid input, object invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse401'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      tags:
+      - Customer
+      summary: delete customer
+      description: |
+        ลบข้อมูล Customer
+      operationId: deleteCustomer
+      parameters:
+      - name: customerId
+        in: query
+        description: Customer Id
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: "1"
+      responses:
+        "200":
+          description: customer deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: invalid input, object invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse401'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      security:
+      - ApiKeyAuth: []
+  /customer/service/customer/invoice:
+    get:
+      tags:
+      - Customer
+      summary: search invoice by customer
+      description: |
+        ค้นหาข้อมูล Invoice ด้วย CustomerId
+      operationId: searchInvoiceByCustomer
+      parameters:
+      - name: customerId
+        in: query
+        description: Customer Id
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: "1"
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnResponse'
+        "400":
+          description: bad input parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse401'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      security:
+      - ApiKeyAuth: []
+  /invoice/service/invoice:
+    get:
+      tags:
+      - Invoice
+      summary: search invoice
+      description: |
+        ค้นหาข้อมูล Invoice
+      operationId: searchInvoice
+      parameters:
+      - name: invoiceId
+        in: query
+        description: Invoice Id
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: "1"
+      - name: invoiceNo
+        in: query
+        description: Invoice No
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: invoiceStartDate
+        in: query
+        description: Invoice Date
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: invoiceEndDate
+        in: query
+        description: Invoice Date
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: customerId
+        in: query
+        description: Customer Id
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnResponse'
+        "400":
+          description: bad input parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse401'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      security:
+      - ApiKeyAuth: []
+    put:
+      tags:
+      - Invoice
+      summary: update an invoice
+      description: อัพเดทข้อมูล Invoice กรณีข้อมูล invoiceLineItem มี itemId จะทำการอัพเดทข้อมูลตาม itemId |กรณีไม่มี itemId จะทำการบันทึกข้อมูล item ใหม่
+      operationId: updateInvoice
+      requestBody:
+        description: Invoice to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/service_invoice_body'
+      responses:
+        "200":
+          description: item update
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: invalid input, object invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse401'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      security:
+      - ApiKeyAuth: []
+    post:
+      tags:
+      - Invoice
+      summary: add invoice
+      description: บันทึกข้อมูล Invoice
+      operationId: addInvoice
+      requestBody:
+        description: Invoice to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/service_invoice_body_1'
+      responses:
+        "200":
+          description: invoice added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+        "400":
+          description: invalid input, object invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse401'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      tags:
+      - Invoice
+      summary: delete invoice
+      description: |
+        ลบข้อมูล Invoice
+      operationId: deleteInvoice
+      parameters:
+      - name: invoiceId
+        in: query
+        description: Invoice Id
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: item update
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: invalid input, object invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse401'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      security:
+      - ApiKeyAuth: []
+  /invoice/service/invoice/item:
+    put:
+      tags:
+      - Invoice Item
+      summary: update invoice item
+      description: อัพเดทข้อมูล Invoice
+      operationId: updateInvoiceItem
+      requestBody:
+        description: Invoice item to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/invoice_item_body'
+      responses:
+        "200":
+          description: item update
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: invalid input, object invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse401'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      security:
+      - ApiKeyAuth: []
+    post:
+      tags:
+      - Invoice Item
+      summary: add invoice item list
+      description: บันทึกข้อมูล Invoice Item
+      operationId: addInvoiceItem
+      requestBody:
+        description: Invoice Item List to add
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/invoice_item_body_1'
+      responses:
+        "200":
+          description: item list added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: invalid input, object invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse401'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      tags:
+      - Invoice Item
+      summary: delete invoice item
+      description: |
+        ลบข้อมูล Invoice
+      operationId: deleteInvoiceItem
+      parameters:
+      - name: invoiceId
+        in: query
+        description: Invoice Id
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: itemId
+        in: query
+        description: Invoice Item Id
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: item update
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: invalid input, object invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse401'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      security:
+      - ApiKeyAuth: []
+  /product/service/product:
+    get:
+      tags:
+      - Product
+      summary: search product list
+      description: |
+        ค้นหาข้อมูล Product
+      operationId: searchProduct
+      parameters:
+      - name: productId
+        in: query
+        description: Product Id
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: "1"
+      - name: productCode
+        in: query
+        description: Product Code (Partial Search)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: productName
+        in: query
+        description: Product Name (Partial Search)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnResponse'
+        "400":
+          description: bad input parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse401'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      security:
+      - ApiKeyAuth: []
+    put:
+      tags:
+      - Product
+      summary: update product
+      description: อัพเดทข้อมูล Product
+      operationId: updateProduct
+      requestBody:
+        description: Products to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        "200":
+          description: item update
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: invalid input, object invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse401'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      security:
+      - ApiKeyAuth: []
+    post:
+      tags:
+      - Product
+      summary: add product
+      description: บันทึกข้อมูล Product
+      operationId: addProduct
+      requestBody:
+        description: Product to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/service_product_body'
+      responses:
+        "200":
+          description: product added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_3'
+        "400":
+          description: invalid input, object invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse401'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      security:
+      - ApiKeyAuth: []
+    delete:
+      tags:
+      - Product
+      summary: delete product
+      description: |
+        ลบข้อมูล Product
+      operationId: deleteProduct
+      parameters:
+      - name: productId
+        in: query
+        description: Product Id
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: item update
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: invalid input, object invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse401'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      security:
+      - ApiKeyAuth: []
+  /util/service/province:
+    get:
+      tags:
+      - Utils
+      summary: search province list
+      description: |
+        ค้นหาข้อมูลจังหวัด
+      operationId: searchProvince
+      parameters:
+      - name: provinceId
+        in: query
+        description: Province Id
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: "20"
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse401'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      security:
+      - ApiKeyAuth: []
+  /util/service/amphur:
+    get:
+      tags:
+      - Utils
+      summary: search amphur list
+      description: |
+        ค้นหาข้อมูลอำเภอ
+      operationId: searchAmphur
+      parameters:
+      - name: provinceId
+        in: query
+        description: Province Id
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: "20"
+      - name: amphurId
+        in: query
+        description: Amphur Id
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: "01"
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnResponse'
+        "400":
+          description: invalid input, object invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse401'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      security:
+      - ApiKeyAuth: []
+  /util/service/tambol:
+    get:
+      tags:
+      - Utils
+      summary: search tambol list
+      description: |
+        ค้นหาข้อมูลตำบล
+      operationId: searchTambol
+      parameters:
+      - name: provinceId
+        in: query
+        description: Province Id
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: "20"
+      - name: amphurId
+        in: query
+        description: Amphur Id
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: "01"
+      - name: tambolId
+        in: query
+        description: Tambol Id
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: "01"
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnResponse'
+        "400":
+          description: invalid input, object invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      security:
+      - ApiKeyAuth: []
+  /invoice-reporting/service/invoice/summary/report:
+    get:
+      tags:
+      - Invoice Report
+      summary: get invoice summary report
+      description: |
+        export Invoice SummaryReport
+      operationId: getInvoiceSummaryReport
+      parameters:
+      - name: fromDate
+        in: query
+        description: Start Invoice Date
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: 05/09/2022
+      - name: toDate
+        in: query
+        description: End Invoice Date
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: 06/09/2022
+      - name: customerId
+        in: query
+        description: Customer Id
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: "1"
+      - name: fileType
+        in: query
+        description: Export File Type (PDF,EXCEL)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: PDF
+      responses:
+        "200":
+          description: Returns Export File
+        "400":
+          description: bad input parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse401'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      security:
+      - ApiKeyAuth: []
+  /invoice-reporting/service/invoice/voucher:
+    get:
+      tags:
+      - Invoice Report
+      summary: get invoice voucher
+      description: |
+        export Invoice Voucher
+      operationId: getInvoiceVoucher
+      parameters:
+      - name: invoiceId
+        in: query
+        description: Invoice Id
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: "1"
+      - name: fileType
+        in: query
+        description: Export File Type (PDF,EXCEL)
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: PDF
+      responses:
+        "200":
+          description: Returns Export File
+        "400":
+          description: bad input parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse401'
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse500'
+      security:
+      - ApiKeyAuth: []
+components:
+  schemas:
+    Customer:
+      required:
+      - addressLine
+      - amphurId
+      - amphurName
+      - creditLimit
+      - customerCode
+      - customerId
+      - customerName
+      - provinceId
+      - provinceName
+      - tambolId
+      - tambolName
+      - tel
+      type: object
+      properties:
+        customerId:
+          type: string
+          example: "1"
+        customerCode:
+          type: string
+          example: CUS001
+        customerName:
+          type: string
+          example: Apple Co., Ltd.
+        creditLimit:
+          type: number
+          example: 40000000
+        tel:
+          type: string
+          example: "024992377"
+        addressLine:
+          type: string
+          example: 212 Rama 4 Road
+        tambolId:
+          type: string
+          example: "01"
+        tambolName:
+          type: string
+          example: ต.บางปลาสร้อย
+        amphurId:
+          type: string
+          example: "01"
+        amphurName:
+          type: string
+          example: อ.เมือง
+        provinceId:
+          type: string
+          example: "20"
+        provinceName:
+          type: string
+          example: ชลบุรี
+    Customers:
+      type: array
+      items:
+        $ref: '#/components/schemas/Customer'
+    ReturnResponse:
+      type: object
+      properties:
+        returnCode:
+          type: string
+          example: S
+        data:
+          type: object
+    Invoice:
+      type: object
+      properties:
+        invoiceId:
+          type: string
+          example: "1"
+        invoiceNo:
+          type: string
+          example: INV100/13
+        invoiceDate:
+          type: string
+          example: 2013-08-22
+        customerId:
+          type: string
+          example: "1"
+        customerCode:
+          type: string
+          example: CUS001
+        totalPrice:
+          type: number
+          example: 400
+        vat:
+          type: number
+          example: 28
+        amountDue:
+          type: number
+          example: 428
+        invoiceLineItem:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoiceLineItem'
+    Invoices:
+      type: array
+      items:
+        $ref: '#/components/schemas/Invoice'
+    InvoiceLineItem:
+      properties:
+        itemId:
+          type: string
+          example: "1"
+        productId:
+          type: string
+          example: "1"
+        productCode:
+          type: string
+          example: C100
+        productName:
+          type: string
+          example: Chalk
+        unitPrice:
+          type: number
+          example: 30
+        quantity:
+          type: number
+          example: 10
+        extendedPrice:
+          type: number
+          example: 300
+    Product:
+      required:
+      - productCode
+      - productId
+      - productName
+      - unit
+      - unitPrice
+      type: object
+      properties:
+        productId:
+          type: string
+          example: "1"
+        productCode:
+          type: string
+          example: C100
+        productName:
+          type: string
+          example: Chalk
+        unitPrice:
+          type: number
+          example: 30
+        unit:
+          type: string
+          example: PCS
+    Products:
+      type: array
+      items:
+        $ref: '#/components/schemas/Product'
+    Province:
+      type: object
+      properties:
+        provinceId:
+          type: string
+          example: "20"
+        provinceName:
+          type: string
+          example: ชลบุรี
+    Provinces:
+      type: array
+      items:
+        $ref: '#/components/schemas/Province'
+    Amphur:
+      allOf:
+      - $ref: '#/components/schemas/Province'
+      - type: object
+        properties:
+          amphurId:
+            type: string
+            example: "01"
+          amphurName:
+            type: string
+            example: อ.เมือง
+    Amphurs:
+      type: array
+      items:
+        $ref: '#/components/schemas/Amphur'
+    Tambol:
+      allOf:
+      - $ref: '#/components/schemas/Amphur'
+      - type: object
+        properties:
+          tambolId:
+            type: string
+            example: "01"
+          tambolName:
+            type: string
+            example: ต.บางปลาสร้อย
+          postCode:
+            type: string
+            example: "20000"
+    Tambols:
+      type: array
+      items:
+        $ref: '#/components/schemas/Tambol'
+    ErrorResponse:
+      type: object
+      properties:
+        returnCode:
+          type: string
+          example: F
+        errorMessage:
+          type: string
+          example: mandatory field ' ... ' is blank
+        errorCode:
+          type: string
+          example: "400"
+    ErrorResponse401:
+      type: object
+      properties:
+        returnCode:
+          type: string
+          example: F
+        errorMessage:
+          type: string
+          example: token is invalid
+        errorCode:
+          type: string
+          example: "401"
+    ErrorResponse500:
+      type: object
+      properties:
+        returnCode:
+          type: string
+          example: F
+        errorMessage:
+          type: string
+          example: Internal Server Error.
+        errorCode:
+          type: string
+          example: "500"
+    inline_response_200:
+      properties:
+        returnCode:
+          type: string
+          example: S
+    service_customer_body:
+      required:
+      - addressLine
+      - amphurId
+      - creditLimit
+      - customerCode
+      - customerName
+      - provinceId
+      - tambolId
+      - tel
+      properties:
+        customerCode:
+          type: string
+          example: CUS001
+        customerName:
+          type: string
+          example: Apple Co., Ltd.
+        creditLimit:
+          type: number
+          example: 40000000
+        tel:
+          type: string
+          example: "024992377"
+        addressLine:
+          type: string
+          example: 212 Rama 4 Road
+        tambolId:
+          type: string
+          example: "01"
+        amphurId:
+          type: string
+          example: "01"
+        provinceId:
+          type: string
+          example: "20"
+    inline_response_200_1:
+      properties:
+        returnCode:
+          type: string
+          example: S
+        data:
+          $ref: '#/components/schemas/inline_response_200_1_data'
+    invoiceserviceinvoice_invoiceLineItem:
+      required:
+      - extendedPrice
+      - productCode
+      - productId
+      - productName
+      - quantity
+      - unitPrice
+      type: object
+      properties:
+        itemId:
+          type: string
+        productId:
+          type: string
+        productCode:
+          type: string
+        productName:
+          type: string
+        unitPrice:
+          type: number
+        quantity:
+          type: number
+        extendedPrice:
+          type: number
+    service_invoice_body:
+      required:
+      - amountDue
+      - customerCode
+      - customerId
+      - invoiceDate
+      - invoiceId
+      - invoiceNo
+      - totalPrice
+      - vat
+      properties:
+        invoiceId:
+          type: string
+          example: "1"
+        invoiceNo:
+          type: string
+          example: INV100/13
+        invoiceDate:
+          type: string
+          example: 2013-08-22
+        customerId:
+          type: string
+          example: "1"
+        customerCode:
+          type: string
+          example: CUS001
+        totalPrice:
+          type: number
+          example: 400
+        vat:
+          type: number
+          example: 28
+        amountDue:
+          type: number
+          example: 428
+        invoiceLineItem:
+          type: array
+          description: กรณีข้อมูล Item มี itemId จะทำการอัพเดทข้อมูลตาม itemId |กรณีไม่มี itemId จะทำการบันทึกข้อมูล item ใหม่
+          example:
+          - itemId: "1"
+            productId: "1"
+            productCode: C100
+            productName: Chalk
+            unitPrice: 30
+            quantity: 10
+            extendedPrice: 300
+          - productId: "2"
+            productCode: C101
+            productName: Pen
+            unitPrice: 10
+            quantity: 20
+            extendedPrice: 200
+          items:
+            $ref: '#/components/schemas/invoiceserviceinvoice_invoiceLineItem'
+    invoiceserviceinvoice_invoiceLineItem_1:
+      required:
+      - extendedPrice
+      - productCode
+      - productId
+      - productName
+      - quantity
+      - unitPrice
+      type: object
+      properties:
+        productId:
+          type: string
+          example: "1"
+        productCode:
+          type: string
+          example: C100
+        productName:
+          type: string
+          example: Chalk
+        unitPrice:
+          type: number
+          example: 30
+        quantity:
+          type: number
+          example: 10
+        extendedPrice:
+          type: number
+          example: 300
+    service_invoice_body_1:
+      required:
+      - amountDue
+      - customerCode
+      - customerId
+      - invoiceDate
+      - invoiceNo
+      - totalPrice
+      - vat
+      properties:
+        invoiceNo:
+          type: string
+          example: INV100/13
+        invoiceDate:
+          type: string
+          example: 2013-08-22
+        customerId:
+          type: string
+          example: "1"
+        customerCode:
+          type: string
+          example: CUS001
+        totalPrice:
+          type: number
+          example: 400
+        vat:
+          type: number
+          example: 28
+        amountDue:
+          type: number
+          example: 428
+        invoiceLineItem:
+          type: array
+          items:
+            $ref: '#/components/schemas/invoiceserviceinvoice_invoiceLineItem_1'
+    inline_response_200_2:
+      properties:
+        returnCode:
+          type: string
+          example: S
+        data:
+          $ref: '#/components/schemas/inline_response_200_2_data'
+    invoice_item_body:
+      required:
+      - extendedPrice
+      - invoiceId
+      - itemId
+      - productCode
+      - productId
+      - productName
+      - quantity
+      - unitPrice
+      properties:
+        invoiceId:
+          type: string
+          description: PK
+          example: "1"
+        itemId:
+          type: string
+          description: PK
+          example: "1"
+        productId:
+          type: string
+          example: "1"
+        productCode:
+          type: string
+          example: C100
+        productName:
+          type: string
+          example: Chalk
+        unitPrice:
+          type: number
+          example: 30
+        quantity:
+          type: number
+          example: 10
+        extendedPrice:
+          type: number
+          example: 300
+    invoice_item_body_1:
+      required:
+      - extendedPrice
+      - invoiceId
+      - productCode
+      - productId
+      - productName
+      - quantity
+      - unitPrice
+      properties:
+        invoiceId:
+          type: string
+          example: "1"
+        productId:
+          type: string
+          example: "1"
+        productCode:
+          type: string
+          example: C100
+        productName:
+          type: string
+          example: Chalk
+        unitPrice:
+          type: number
+          example: 30
+        quantity:
+          type: number
+          example: 10
+        extendedPrice:
+          type: number
+          example: 300
+    service_product_body:
+      required:
+      - productCode
+      - productName
+      - unit
+      - unitPrice
+      properties:
+        productCode:
+          type: string
+          example: C100
+        productName:
+          type: string
+          example: Chalk
+        unitPrice:
+          type: number
+          example: 30
+        unit:
+          type: string
+          example: PCS
+    inline_response_200_3:
+      properties:
+        returnCode:
+          type: string
+          example: S
+        data:
+          $ref: '#/components/schemas/inline_response_200_3_data'
+    inline_response_200_1_data:
+      type: object
+      properties:
+        customerId:
+          type: string
+          example: "1"
+    inline_response_200_2_data:
+      type: object
+      properties:
+        invoiceId:
+          type: string
+          example: "1"
+    inline_response_200_3_data:
+      type: object
+      properties:
+        productId:
+          type: string
+          example: "1"
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: ApiKey สำหรับทดสอบ = invoiceToken
+      name: accessToken
+      in: header

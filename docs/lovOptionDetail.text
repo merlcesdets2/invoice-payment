@@ -1,0 +1,12 @@
+props: {
+    listData: // object array containt data
+    config: {
+     nameTable: 'customer'  name of lov table use to map path
+     primaryKey: 'customerId' key to do action like edit delete
+     primaryName: 'customerName' use to show content of row
+     header: header contains aray label and key
+     action: { del: {url: String(`${apiCustomer}/customer/service/customer`)}} now use to delete row
+    }
+    selectRow: () => {} //callback return value from select current row
+}
+

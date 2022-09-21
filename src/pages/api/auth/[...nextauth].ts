@@ -1,4 +1,8 @@
 import NextAuth from 'next-auth'
+import userFromBE from '../../../../docs/mockDataUser.json'
+
+const checkPermission = async (email: string | undefined | null) =>
+  userFromBE.find((beUser) => beUser.email === email)?.role
 
 export default NextAuth({
   providers: [
@@ -28,6 +32,15 @@ export default NextAuth({
     },
   ],
   callbacks: {
+    async signIn({ user }) {
+      const email = user.email
+      const permission = await checkPermission(email)
+
+      if (!permission) return '/auth/unauthorized'
+
+      user.role = permission
+      return true
+    },
     async jwt({ token, user, account }) {
       if (account) token.accessToken = account.access_token
       if (user) token.user = user

@@ -1,31 +1,31 @@
-import { createStyles, Header, Menu, Group, Center, Burger, Box, Code,Text} from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { createStyles, Header, Menu, Group, Burger, Box, Text } from '@mantine/core';
+import { IconChevronDown } from '@tabler/icons';
+
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { ChevronDown } from 'tabler-icons-react';
+import Image from 'next/image'
+import { useState } from 'react';
+import logo from "@/public/assets/images/3bblogo.png"
+
 import { UserButton } from '../userButton';
+import { NavbarNested } from './sidebar'
+import { menulist } from './menubar'
+import { useRouter } from 'next/router';
+import { useMediaQuery } from '@mantine/hooks';
+
+
 
 const useStyles = createStyles((theme) => ({
+
   header: {
+    backgroundColor: theme.colors[theme.primaryColor],
     paddingLeft: theme.spacing.md,
-    paddingRight: theme.spacing.md,
-  },
-  inner: {
-    height: 65,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    paddingRight: theme.spacing.md
   },
 
   links: {
-    [theme.fn.smallerThan('sm')]: {
-      display: 'none',
-    },
-  },
-
-  burger: {
-    [theme.fn.largerThan('sm')]: {
-      display: 'none',
+    [theme.fn.smallerThan('md')]: {
+      display: 'none'
     },
   },
 
@@ -33,121 +33,103 @@ const useStyles = createStyles((theme) => ({
     display: 'block',
     lineHeight: 1,
     padding: '8px 12px',
+    backgroundColor: 'transparent',
     borderRadius: theme.radius.sm,
     textDecoration: 'none',
-    color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[7],
     fontSize: theme.fontSizes.sm,
+    color: 'white' ,
     fontWeight: 500,
-
+    cursor: 'pointer',
     '&:hover': {
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+      backgroundColor: theme.colors[theme.primaryColor][6],
     },
   },
-
-  linkLabel: {
-    marginRight: 5,
+  navbar: {
+    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.white,
+    height: '500px'
   },
+  mainLinkActive: {
+    color: '#f58621',
+  },
+
 }));
 
 
-interface menulistProp {
-  label: string;
-  initiallyOpened?: boolean;
-  links: LinksProp[] | string; 
-}
-
-interface LinksProp {
-  label: string;
-  link: string 
-}
-
-const menulist: menulistProp[] = [
-  { label: 'List Invoice', links: '/invoice'},
-  { label: 'List Customer',links: '/customer'},
-  {
-    label: 'Create',
-    initiallyOpened: true,
-    links: [
-      { label: 'Create Invoice', link: '/invoice/add' },
-      { label: 'Create Customer', link: '/customer/add' },
-      { label: 'Create Products', link: '/product/add' },
-    ],
-  },
-];
-
 export const Headbar = () => {
-  const [opened, { toggle }] = useDisclosure(false);
-  const { classes } = useStyles();
+  
+  const [opened,setOpened] = useState(false);
+  const { classes,cx } = useStyles();
   const { data: session } = useSession()
-
   const profile = session?.user
   const email = profile ? profile.email : 'tbb@tbb.com'
   const fullname = profile ? profile.fullname : 'firstname lastname'
   const image = profile?.image
+  
+  const router = useRouter()
+  const currentPath = router.asPath
+  const handleChange = (opened: boolean) => {
+    setOpened(opened);
+  }
 
-  const items = menulist.map((obj) => {
-    const menuItems =(Array.isArray(obj.links) ? obj.links : []).map((item: LinksProp) => (
-      <Menu.Item key={item.link} >
-        <Link href={item.link} key={item.label}>
-            <a
-              href={item.link}
-              className={classes.link}
-              onClick={toggle}
-            >
-              <Center>
-                <span className={classes.linkLabel}>{item.label}</span>
-              </Center>
-            </a>
-        </Link>
-      </Menu.Item>
-    ));
-    if (menuItems.length>0) {
+  const largeScreen = useMediaQuery('(min-width: 1080px)');
+  
+  const items = menulist.map((menu) => {
+    const menuMatch = Array.isArray(menu.links) ? menu.links.map(l => l.link) : menu.links
+    const active = Array.isArray(menuMatch) ? menuMatch.includes(currentPath) : menuMatch === currentPath
+    const menuLabel = (
+      <div className={cx(classes.link, { [classes.mainLinkActive]: active })} >
+        <Group sx={{gap: 3}}>
+          <menu.icon size={20}/>
+          {menu.label}
+          {menu.hasChild && <IconChevronDown size={12} />}
+        </Group>
+      </div>
+    )
+
+    if (menu.hasChild) {
+      const menuItems = (Array.isArray(menu.links) ? menu.links : []).map((item) => {
+        const activeChild = item.link === currentPath
+        return <Link href={item.link} key={item.label} >
+                <Menu.Item key={item.link} style={{height:50}}>
+                  <Text component='a' weight={600} color={activeChild ? 'orange' : 'black'}>
+                    {item.label}
+                  </Text>
+                </Menu.Item>
+              </Link>
+      })
       return (
-        <Menu key={obj.label} trigger="hover" exitTransitionDuration={0}>
+        <Menu key={menu.label} trigger="hover" exitTransitionDuration={0}>
           <Menu.Target>
-            <a
-              className={classes.link}
-            >
-              <Center>
-                <span className={classes.linkLabel}>{obj.label}</span>
-                <ChevronDown size={12} />
-              </Center>
-            </a>
+            {menuLabel}
           </Menu.Target>
           <Menu.Dropdown>{menuItems}</Menu.Dropdown>
         </Menu>
       );
     }
-    else{
-      return (
-      <Link href={(Array.isArray(obj.links)) ? '' : obj.links } key={obj.label}>
-          <span className={classes.link}>
-            {obj.label}
-          </span>
-      </Link>  
-    );
-    }
-  });
     return (
-      <Header height={65} mb={120} className={classes.header}>
-      <div className={classes.inner}>
-      <Group position="apart" >
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Text>Invoice Payment</Text>
+      <Link href={(Array.isArray(menu.links)) ? '' : menu.links} key={menu.label}>
+        {menuLabel}
+      </Link>
+    )
+  })
+
+  return (
+    <Header height={75} mb={120} className={classes.header}>
+    <Group position="apart" style={{height: '75px'}}>
+      <Group position="apart">
+          <Box>
+              <Image src={logo} alt="logo" width={115} height={50}/>
           </Box>
-          <Code sx={{ fontWeight: 700 }} ml='lg'>v.1.0.0</Code>
+          <Text weight={700} color={'white'}>INVOICE</Text>
       </Group>
-        <Group spacing={5} className={classes.links}>
-          {items}
-        </Group>
-          <UserButton  
-            image={image ? image : ''}
-            name={fullname}
-            email={email}
-          />
-        <Burger opened={opened} onClick={toggle} className={classes.burger} size="sm" />
-      </div>
+      <Group spacing={5} className={classes.links}>
+        {items}
+      </Group>
+      {largeScreen ? <UserButton image={image ? image : ''} name={fullname} email={email}/> 
+      : <Burger opened={opened} onClick={()=>setOpened(!opened)} color='white' size="sm" style={{height:'auto'}}/>}
+    </Group>
+    { opened && <NavbarNested  setopen={handleChange} /> }
   </Header>
-    );
+  );
 }
 

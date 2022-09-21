@@ -1,18 +1,18 @@
-## Getting Started
+## INVOICE PAYMENT
 
-This project create for invoice system using typescript.  
-we use component library with mantine please check [Mantine-Dev](https://mantine.dev/getting-started/).  
+This project create for invoice system using npx create-next-app@latest --ts
+Component library [Mantine-Dev](https://mantine.dev/getting-started/).  
+Authentication [NextAuth](https://next-auth.js.org/).
 
-` please use yarn instead npm install . npm is bug !!!!!!`
-
-
-install:
+Install the dependencies:
 ```
+    - npm
     - yarn
 ```
 
-run the development server:
+Run the development:
 ```
+    - npm  run dev
     - yarn dev
 ```
 
