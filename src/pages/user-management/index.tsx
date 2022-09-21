@@ -1,13 +1,14 @@
-// import { AppConfig } from '@/AppConfig'
+import { AppConfig } from '@/AppConfig'
 import { configProduct } from '@/components/lov/config'
 import { InferGetServerSidePropsType } from 'next'
-// import axiosConfig from '@/util/axiosConfig'
+import axiosConfig from '@/util/axiosConfig'
 
-// const { apiUrl } = AppConfig
+const { apiUrl } = AppConfig
 
 export const getServerSideProps = async () => {
 
-  // const listData = await axiosConfig.get(`${apiUrl}/product/service/product`)
+  const listData2 = await axiosConfig.get(`${apiUrl}/product/service/product`)
+  console.log(listData2)
   const listData = {a: 'prince'}
   const data = listData.a
   const config = {
